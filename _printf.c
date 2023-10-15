@@ -7,7 +7,7 @@
  */
 int _printf(const char *format, ...)
 {
-	unsigned int i, count = 0;
+	unsigned int i, s_count, count = 0;
 
 	va_list args;
 
@@ -23,6 +23,16 @@ int _printf(const char *format, ...)
 		{
 			_puttchar(va_arg(args, int));
 			i++;
+		}
+		else if (format[i + 1] == 's')
+		{
+			s_count = putss(va_arg(args, char *));
+			i++;
+			count += (s_count - 1);
+		}
+		else if (format[i + 1] == '%')
+		{
+			_puttchar('%');
 		}
 		count += 1;
 	}
