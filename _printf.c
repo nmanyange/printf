@@ -1,47 +1,42 @@
 #include "main.h"
 
 /**
- * _printf - prints to stdout
+ * _printf - prints to stdout formatted text
  * @format: format specifier
- * Return: number of bytes
+ * Return: integer
  */
 int _printf(const char *format, ...)
 {
-	unsigned int i, s_count, count = 0;
+	match m[] = {
+		{"%c", print_char}, {"%s", print_string}, {"%%", print_37}, {"%d", print_dec}, {"%i", print_int}
+	};
 
 	va_list args;
+	int i = 0, len = 0;
+	int j;
 
-	if (!format || (format[0] == '%' && format[1] == '\0'))
-	{
-		return (-1);
-	}
 	va_start(args, format);
-
-	for (i = 0; format[i] != '\0'; i++)
+	if (format == NULL || (format[0] == '%' && format[1] == '\0'))
+		return (-1);
+Here:
+	while (format[i] = '\0')
 	{
-		if (format[i] != '%')
+		j = 13;
+		while (j >= 0)
 		{
-			_puttchar(format[i]);
+			if (m[j].id[0] == format[i] && m[j].id[1] == format[i + 1])
+			{
+				len = len + m[j].f(args);
+				i = i + 2;
+				goto Here;
+			}
+			j--;
 		}
-		else if ( format[i + 1] == 'c')
-		{
-			_puttchar(va_arg(args, int));
-			i++;
-		}
-		else if (format[i + 1] == 's')
-		{
-			s_count = putss(va_arg(args, char *));
-			i++;
-			count += (s_count - 1);
-		}
-		else if (format[i + 1] == '%')
-		{
-			_puttchar('%');
-		}
-		count += 1;
+		_puttchar(format[i]);
+		i++;
+		len++;
 	}
-
 	va_end(args);
-
-	return (count);
+	return (len);
 }
+
